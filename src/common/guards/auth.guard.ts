@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard as COREAuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
+import { PermissionDecoratorInterface } from '../interfaces';
 
 @Injectable()
 export class AuthGuard extends COREAuthGuard('jwt') {
@@ -29,8 +30,8 @@ export class AuthGuard extends COREAuthGuard('jwt') {
     if (err || !user) {
       throw err || new UnauthorizedException();
     }
-    const permissions = this.reflector.get<string[]>(
-      'permissions',
+    const permission = this.reflector.get<PermissionDecoratorInterface[]>(
+      'permission',
       context.getHandler(),
     );
     if (user.user_type === 'USER') {
@@ -40,15 +41,23 @@ export class AuthGuard extends COREAuthGuard('jwt') {
     if (!user.role || !user.role.permission) {
       throw new UnauthorizedException();
     }
-    if (!permissions) {
+    if (!permission) {
       return user;
     }
-    return this.matchPermission(user, permissions);
+    return this.matchPermission(user, permission);
   }
 
-  matchPermission(user, permission) {
+  matchPermission(user, permission: PermissionDecoratorInterface[]) {
+    const permissionClone = [];
+    permission.map((item) => {
+      permissionClone.push({
+        model: item.model.toLowerCase(),
+        action: item.action.toLowerCase(),
+      });
+    });
     const hasPermission = user.role.permission.find((elem: any) => {
-      return permission.includes(elem.db);
+      return (permissionClone[0].model =
+        elem.model && permissionClone[0].action === elem.action);
     });
     if (!hasPermission) {
       throw new UnauthorizedException({

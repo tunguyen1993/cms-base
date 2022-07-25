@@ -29,6 +29,7 @@ export class Users {
       },
       permission: [
         {
+          _id: false,
           model: {
             type: mongoose.Schema.Types.String,
             unique: true,

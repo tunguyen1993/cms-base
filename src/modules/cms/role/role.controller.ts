@@ -13,7 +13,7 @@ import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/createRole.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateRoleDto } from './dto/updateRole.dto';
-import { AuthGuard, PermissionDecorator } from '../../../common';
+import { AuthGuard, PermissionDecorator, Roles } from '../../../common';
 
 @Controller({
   version: '1',
@@ -29,7 +29,10 @@ export class RoleController {
    */
   @ApiTags('Create Role')
   @ApiOkResponse({ description: 'Create Role Success' })
-  @PermissionDecorator('roles')
+  @PermissionDecorator({
+    model: Roles.name,
+    action: 'write',
+  })
   @Post()
   async create(@Body() body: CreateRoleDto, @Res() response) {
     const data = await this.rolesService.actionCreate(body);
@@ -48,7 +51,10 @@ export class RoleController {
    */
   @ApiTags('Add Permission Role')
   @ApiOkResponse({ description: 'add or remove permission Role Success' })
-  @PermissionDecorator('roles')
+  @PermissionDecorator({
+    model: Roles.name,
+    action: 'edit',
+  })
   @Patch(':id')
   async updatePermission(
     @Body() body: UpdateRoleDto,

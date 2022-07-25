@@ -21,7 +21,7 @@ export class PermissionSeed extends BaseService<Permissions> {
   async seedPermission() {
     const permissions = [
       {
-        action: 'read',
+        action: 'view',
         model: 'roles',
       },
       {
@@ -33,11 +33,11 @@ export class PermissionSeed extends BaseService<Permissions> {
         model: 'roles',
       },
       {
-        action: 'update',
+        action: 'edit',
         model: 'roles',
       },
       {
-        action: 'read',
+        action: 'view',
         model: 'permissions',
       },
       {
@@ -49,11 +49,11 @@ export class PermissionSeed extends BaseService<Permissions> {
         model: 'permissions',
       },
       {
-        action: 'update',
+        action: 'edit',
         model: 'permissions',
       },
       {
-        action: 'read',
+        action: 'view',
         model: 'users',
       },
       {
@@ -65,7 +65,7 @@ export class PermissionSeed extends BaseService<Permissions> {
         model: 'users',
       },
       {
-        action: 'update',
+        action: 'edit',
         model: 'users',
       },
     ];

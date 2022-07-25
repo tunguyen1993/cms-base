@@ -25,7 +25,7 @@ export const ROUTE: Routes = [
         module: PermissionsModule,
       },
       {
-        path: '',
+        path: 'auth',
         module: AuthenticationModuleCMS,
       },
     ],

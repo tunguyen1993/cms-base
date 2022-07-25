@@ -29,6 +29,15 @@ export class AuthenticationService extends BaseAuthenticationService {
         role: { $exists: true },
         user_type: 'CMS',
       })
+      .select([
+        'email',
+        'name',
+        'phoneNumber',
+        'status',
+        'gender',
+        'password',
+        'role',
+      ])
       .exec();
     if (!user) {
       throw new HttpException('invalid email and password!', 403);

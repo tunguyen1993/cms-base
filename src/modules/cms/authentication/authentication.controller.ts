@@ -21,7 +21,7 @@ export class AuthenticationController {
     const user = await this.authService.validateUser(body);
     return response.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
-      description: 'login success',
+      description: `Welcome back ${user.name}`,
       data: await this.authService.login(user),
     });
   }

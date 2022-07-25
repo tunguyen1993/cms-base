@@ -12,7 +12,13 @@ import {
 import { UserService } from './user.service';
 import { EditRoleDto } from './dto/editRole.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard, PermissionDecorator, Roles, Users } from '../../../common';
+import {
+  AuthGuard,
+  PermissionDecorator,
+  Roles,
+  User,
+  Users,
+} from '../../../common';
 import { RoleService } from '../role/role.service';
 
 @Controller({
@@ -28,7 +34,10 @@ export class UserController {
   @ApiTags('Edit Permission')
   @ApiOkResponse({ description: 'Edit Permission Success' })
   @Patch('edit-permission/:user_id')
-  @PermissionDecorator('users')
+  @PermissionDecorator({
+    model: Users.name,
+    action: 'edit',
+  })
   async editPermission(
     @Body() editRole: EditRoleDto,
     @Param('user_id') id: string,
@@ -56,13 +65,18 @@ export class UserController {
     });
   }
 
+  @ApiTags('Get information current user')
+  @ApiOkResponse({ description: 'get User Success' })
   @Get()
-  @PermissionDecorator('users')
-  async test(@Res() response) {
+  @PermissionDecorator({
+    model: Users.name,
+    action: 'view',
+  })
+  async me(@User() user: Users, @Res() response) {
     return response.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
       description: 'Edit Role User Success',
-      data: 111,
+      data: user,
     });
   }
 }

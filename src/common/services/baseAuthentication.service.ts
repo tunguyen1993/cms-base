@@ -16,19 +16,14 @@ export class BaseAuthenticationService {
    *
    * @param user
    */
-  async login(user: Users) {
-    // ...user["_doc"],
-
+  public async login(user: Users) {
     const encode = {
       _id: user['_id'],
       email: user.email,
       phoneNumber: user.phoneNumber,
     };
     const access_token = await this.generateToken(encode);
-    const refresh_token = this.jwtService.sign(
-      encode,
-      BaseAuthenticationService.getTokenOptions('refresh', user),
-    );
+    const refresh_token = await this.generateToken(encode, 'refresh');
     await this.setCurrentRefreshToken(refresh_token, user['_id'].toString());
     return {
       access_token,
@@ -39,31 +34,24 @@ export class BaseAuthenticationService {
 
   /**
    *
-   * @param user
    * @private
+   * @param user
+   * @param type
    */
-  private async generateToken(user) {
+  private async generateToken(
+    user: any,
+    type: string | undefined = undefined,
+  ): Promise<string> {
+    if (type === 'refresh') {
+      return this.jwtService.sign(user, {
+        secret: process.env.JWTKEY,
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
+      });
+    }
     return this.jwtService.sign(user, {
       secret: process.env.JWTKEY,
       expiresIn: process.env.TOKEN_EXPIRATION,
     });
-  }
-
-  /**
-   *
-   * @param type
-   * @param user
-   * @private
-   */
-  private static getTokenOptions(type: string, user: Users) {
-    const options: JwtSignOptions = {
-      secret: process.env.JWTKEY,
-    };
-    const expiration: string = process.env.REFRESH_TOKEN_EXPIRATION;
-    if (expiration) {
-      options.expiresIn = expiration;
-    }
-    return options;
   }
 
   /**

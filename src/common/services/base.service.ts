@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { BaseServiceInterface } from '../interfaces/baseService.interface';
+import { BaseServiceInterface } from '../interfaces';
 import { Model } from 'mongoose';
 
 @Injectable()

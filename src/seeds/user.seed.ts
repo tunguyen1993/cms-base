@@ -29,7 +29,7 @@ export class UserSeed extends BaseService<Users> {
       {
         email: 'root@gmail.com',
         name: 'root',
-        password: '123456789',
+        password: 'root@gmail',
         phoneNumber: Math.floor(Math.random() * 1000000000),
         status: 'ACTIVE',
         user_type: 'CMS',

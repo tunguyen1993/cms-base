@@ -12,7 +12,7 @@ import { PermissionsService } from './permissions.service';
 import { CreatePermissionsDto } from './dto/createPermissions.dto';
 import { UpdatePermissionsDto } from './dto/updatePermissions.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard, PermissionDecorator } from '../../../common';
+import { AuthGuard, PermissionDecorator, Permissions } from '../../../common';
 
 @Controller({
   version: '1',
@@ -29,7 +29,10 @@ export class PermissionsController {
   @ApiTags('Create Permission')
   @ApiOkResponse({ description: 'create success' })
   @Post()
-  @PermissionDecorator('permissions')
+  @PermissionDecorator({
+    model: Permissions.name,
+    action: 'write',
+  })
   async createPermission(@Body() body: CreatePermissionsDto, @Res() response) {
     return response.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
@@ -47,7 +50,10 @@ export class PermissionsController {
   @ApiTags('Update Permission')
   @ApiOkResponse({ description: 'update success' })
   @Patch(':id')
-  @PermissionDecorator('permissions')
+  @PermissionDecorator({
+    model: Permissions.name,
+    action: 'edit',
+  })
   async updatePermission(
     @Body() body: UpdatePermissionsDto,
     @Param('id') id: string,

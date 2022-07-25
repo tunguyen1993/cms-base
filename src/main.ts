@@ -1,14 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
-import * as csurf from 'csurf';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AuthenticationModule } from './modules/client';
 import {
   AuthenticationModule as AuthenticationModuleCMS,
   RoleModule,
   PermissionsModule,
+  UserModule,
 } from './modules/cms';
+import { HttpInterceptor, ValidateInputPipe } from './common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -19,7 +20,9 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
   app.enableCors();
-  app.use(csurf());
+  app.useGlobalPipes(new ValidateInputPipe());
+  app.useGlobalInterceptors(new HttpInterceptor());
+
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: false,
@@ -41,7 +44,12 @@ async function bootstrap() {
     .build();
 
   const cmsDocument = SwaggerModule.createDocument(app, cmsConfig, {
-    include: [AuthenticationModuleCMS, PermissionsModule, RoleModule],
+    include: [
+      AuthenticationModuleCMS,
+      PermissionsModule,
+      RoleModule,
+      UserModule,
+    ],
   });
   const clientDocument = SwaggerModule.createDocument(app, clientConfig, {
     include: [AuthenticationModule],

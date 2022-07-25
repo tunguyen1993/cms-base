@@ -8,6 +8,7 @@ import { RoleSeed } from './role.seed';
 import RoleSchema from '../common/database/schemas/role.schema';
 import UserSchema from '../common/database/schemas/user.schema';
 import { UserSeed } from './user.seed';
+import { IndexSeed } from './index.seed';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { UserSeed } from './user.seed';
     ]),
     CommandModule,
   ],
-  providers: [PermissionSeed, RoleSeed, UserSeed],
-  exports: [PermissionSeed, RoleSeed, UserSeed],
+  providers: [PermissionSeed, RoleSeed, UserSeed, IndexSeed],
+  exports: [PermissionSeed, RoleSeed, UserSeed, IndexSeed],
 })
 export class SeedsModule {}

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { join } from 'path';
 import { ClientModule } from './modules/client';
 import { CmsModule } from './modules/cms';
@@ -15,6 +15,7 @@ import {
   LoggerModule,
 } from './common';
 import { SeedsModule } from './seeds/seeds.module';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
 const envFilePath: string = getEnvPath(`${__dirname}/../`);
 
 @Module({
@@ -66,4 +67,8 @@ const envFilePath: string = getEnvPath(`${__dirname}/../`);
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
